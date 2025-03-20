@@ -24,7 +24,18 @@ The SSH keys of all our team members were added to the server.
 
 ### Docker installation
 
-Docker was installed using the apt repository and as shown in [this guide](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository). `sudo docker run hello-world` confirmed the successful installation.
+Docker was installed using the apt repository and as shown in [this guide](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository).
+
+#### Add user to docker group
+
+The INS user needs to be added to the docker group, otherwise a permission denied error appears when using docker run. Refer [to this guide](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) for more details. The commands are the following:
+
+```terminal
+sudo groupadd docker
+sudo usermod -aG docker $USER
+newgrp docker # applies group changes
+docker run hello-world # confirms the successful installation.
+```
 
 ### Clone backend repository
 
@@ -38,3 +49,13 @@ Docker was installed using the apt repository and as shown in [this guide](https
         IdentityFile ~/.ssh/backend-SSH-key
         IdentitiesOnly yes
     ```
+
+## Connect to DB
+
+The connection to the DB with pgadmin works with the following settings.
+
+!["pg4 admin settings"](./img/pg4admin-settings.png "pg4 admin settings")
+
+### Todo
+
+- store pw securely
