@@ -16,7 +16,21 @@
 
 The SSH keys of all our team members were added to the server.
 
+## Connect to DB
+
+OST VPN connection required! Any application that can make connections to a postgres database should work. For example [pgadmin4](https://www.pgadmin.org/download/).
+
+- Hostname: `srbsci-141.ost.ch`
+- Port: `5432`
+- Database: `ost`
+- Username: `postgres`
+- Password: ask Roman
+
+!["pg4 admin settings"](./img/pg4admin-settings.png "pg4 admin settings")
+
 ## Server setup
+
+This is the server setup part, which is only needed in case the server needs to be reinstalled!
 
 ### Authorized keys
 
@@ -49,10 +63,4 @@ docker run hello-world # confirms the successful installation.
         IdentityFile ~/.ssh/backend-SSH-key
         IdentitiesOnly yes
     ```
-
-## Connect to DB
-
-The connection to the DB with pgadmin works with the following settings. The password is stored in the .env file on the server.
-
-!["pg4 admin settings"](./img/pg4admin-settings.png "pg4 admin settings")
 
