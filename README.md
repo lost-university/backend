@@ -14,4 +14,27 @@
 1. Connect to OST VPN.
 2. `ssh -i ~/.ssh/id_ed25519 ins@srbsci-141.ost.ch`
 
-[SSH keys](https://ostch-my.sharepoint.com/:x:/r/personal/leo_oetterli_ost_ch/Documents/Bachelor_Inf_Sem6/SE-Project/Server/ssh-keys.xlsx?d=we57d8d4556124528818f8e2ff6182bc0&csf=1&web=1&e=hdLdLD) were added to ./ssh/authorized_keys.
+The SSH keys of all our team members were added to the server.
+
+## Server setup
+
+### Authorized keys
+
+[SSH keys](https://ostch-my.sharepoint.com/:t:/r/personal/leo_oetterli_ost_ch/Documents/Bachelor_Inf_Sem6/SE-Project/Server/authorized_keys.txt?csf=1&web=1&e=AtQha6) were added to ./ssh/authorized_keys.
+
+### Docker installation
+
+Docker was installed using the apt repository and as shown in [this guide](https://docs.docker.com/engine/install/ubuntu/#install-using-the-repository). `sudo docker run hello-world` confirmed the successful installation.
+
+### Clone backend repository
+
+1. A new SSH key called `backend-SSH-key` was created on the server (no passphrase).
+2. The SSK key was added as a deploy-key (read/write) in the backend repository. [Link to guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys#deploy-keys).
+3. `~/.ssh/config` created to use correct SSH key.
+
+    ```text
+    Host github.com
+        User git
+        IdentityFile ~/.ssh/backend-SSH-key
+        IdentitiesOnly yes
+    ```
