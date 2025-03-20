@@ -52,10 +52,7 @@ docker run hello-world # confirms the successful installation.
 
 ## Connect to DB
 
-The connection to the DB with pgadmin works with the following settings.
+The connection to the DB with pgadmin works with the following settings. The password is stored in the .env file on the server.
 
 !["pg4 admin settings"](./img/pg4admin-settings.png "pg4 admin settings")
 
-### Todo
-
-- store pw securely
