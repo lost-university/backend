@@ -64,3 +64,8 @@ docker run hello-world # confirms the successful installation.
         IdentitiesOnly yes
     ```
 
+### Postgres password
+
+1. In the backend repository, create a new file `touch .env` and add the password.
+
+The docker-compose file will import the file as a secret and set it as the Postgres password. `.env` is added go the `.gitignore` file, so the password isn't in GitHub.
