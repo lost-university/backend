@@ -9,6 +9,10 @@
 - End of life: 2025-10-31 (automatically deleted after this date)
 - Support: <sgi-support@ost.ch>
 
+## Service
+
+The backend service is written in python. For development follow these [instructions](service/README.md)
+
 ## Connect to Ubuntu server
 
 1. Connect to OST VPN.

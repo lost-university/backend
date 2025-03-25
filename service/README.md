@@ -9,9 +9,9 @@ Here you find all the important development information about the backend servic
 - [sqlmodel](https://sqlmodel.tiangolo.com/)
 
 Development:
-- [pytest]()
-- [scarlett]()
-- [ruff]()
+- [pytest](https://docs.pytest.org/en/stable/)
+- [scarlett](https://www.starlette.io/)
+- [ruff](https://docs.astral.sh/ruff/)
 
 ## Development
 
@@ -33,3 +33,4 @@ Development:
 
 ## Testing
 
+Here is a link to a fastapi tutorial [link](https://fastapi.tiangolo.com/how-to/testing-database/)
