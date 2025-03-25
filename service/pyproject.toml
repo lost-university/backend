@@ -1,0 +1,17 @@
+[project]
+name = "service"
+version = "0.1.0"
+description = "FastAPI backend service for lost.university"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi[standard]>=0.115.12",
+    "psycopg>=3.2.6",
+    "sqlmodel>=0.0.24",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.5",
+    "ruff>=0.11.2",
+]

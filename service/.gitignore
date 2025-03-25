@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+#Distribution / packaging
+/dist
+dist/
+
+# Environments
+.env
+.venv
+env/
+venv/
+
+# Ruff stuff
+.ruff_cache/
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsporj
+*.sln
+.*.sw?
+
+# macOS
+.DS_Store
