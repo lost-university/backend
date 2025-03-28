@@ -8,6 +8,7 @@ dependencies = [
     "fastapi[standard]>=0.115.12",
     "psycopg>=3.2.6",
     "sqlmodel>=0.0.24",
+    "clerk_backend_api"
 ]
 
 [dependency-groups]

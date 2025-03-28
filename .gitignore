@@ -1,2 +1,4 @@
 # File with secret
 .env
+
+/.idea/
