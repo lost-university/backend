@@ -30,7 +30,27 @@ Development:
    uv run fastapi dev
    ```
 
+## Linting
+Use the following command to reformat the files:
+```bash
+uv run ruff format app/
+```
+
+Use the following command to show the lint results:
+```bash
+uv run ruff check app/
+```
+
+Use the following command to fix fixable mistakes:
+```bash
+uv run ruff check app/ --fix
+```
 
 ## Testing
-
 Here is a link to a fastapi tutorial [link](https://fastapi.tiangolo.com/how-to/testing-database/)
+Here is a link to the pytest documentation [link](https://docs.pytest.org/en/stable/)
+
+Use the following command to run the tests:
+```bash
+uv run pytest
+```

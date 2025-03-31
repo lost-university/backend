@@ -1,7 +1,7 @@
 import os
 
 from clerk_backend_api import Clerk
-from clerk_backend_api.jwks_helpers import AuthenticateRequestOptions
+from clerk_backend_api.jwks_helpers import AuthenticateRequestOptions, RequestState
 from fastapi import HTTPException, Request
 from sqlmodel import Session, select
 
@@ -9,7 +9,7 @@ from ..database import engine
 from ..models.user import User
 
 
-def auth_dependency(request: Request) -> Clerk.RequestState:
+def auth_dependency(request: Request) -> RequestState:
     authorization = request.headers.get("Authorization")
 
     if not authorization:
