@@ -2,3 +2,6 @@
 .env
 
 /.idea/
+
+# macOS
+.DS_Store

@@ -1,8 +1,8 @@
 from database import create_db_and_tables
-from models import User, Plan
+from service.app.models import plan, user
 
 
-def main():
+def main() -> None:
     create_db_and_tables()
     print("Database tables created!")
 

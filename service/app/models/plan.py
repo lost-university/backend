@@ -1,6 +1,7 @@
-from sqlmodel import SQLModel, Field
 import uuid
 from datetime import datetime
+
+from sqlmodel import Field, SQLModel
 
 
 class Plan(SQLModel, table=True):

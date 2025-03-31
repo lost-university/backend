@@ -1,7 +1,7 @@
-from sqlmodel import SQLModel, create_engine
 import os
 
 from dotenv import load_dotenv
+from sqlmodel import SQLModel, create_engine
 
 load_dotenv()
 
@@ -10,5 +10,5 @@ postgres_url = f"postgresql+psycopg://{os.getenv('POSTGRES_USER')}:{os.getenv('P
 engine = create_engine(postgres_url, echo=True)
 
 
-def create_db_and_tables():
+def create_db_and_tables() -> None:
     SQLModel.metadata.create_all(engine)
