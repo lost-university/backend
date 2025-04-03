@@ -1,10 +1,10 @@
-from fastapi import FastAPI, Depends, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from sqlmodel import Session, select
 
-from .middlewares.auth_middleware import auth_dependency
-from .models.Plan import Plan
 from .database import engine
+from .middlewares.auth_middleware import auth_dependency
+from .models.plan import Plan
 
 app = FastAPI()
 
