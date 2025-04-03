@@ -38,8 +38,11 @@ def auth_dependency(request: Request):
         if sdk_user is None:
             raise HTTPException(status_code=401, detail="User not found")
 
-        request.state.user = User(clerk_id=request_state.payload['sub'], email=sdk_user.email_addresses[0].email_address)
-        session.add(request.state.user)
+        user = User(clerk_id=request_state.payload['sub'], email=sdk_user.email_addresses[0].email_address)
+        session.add(user)
         session.commit()
+
+        session.refresh(user)
+        request.state.user = user
 
     return request_state
