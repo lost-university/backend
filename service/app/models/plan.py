@@ -3,7 +3,6 @@ from datetime import datetime
 
 from sqlmodel import Field, SQLModel
 
-
 class Plan(SQLModel, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     group_version_id: uuid.UUID = Field(default_factory=uuid.uuid4)
