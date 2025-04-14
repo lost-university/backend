@@ -1,15 +1,17 @@
+from collections.abc import Sequence
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, Request
 from sqlmodel import Session
 
-from ..middlewares.auth_middleware import auth_dependency
 from ..database import get_session
-from ..services.plan_service import get_plans
+from ..middlewares.auth_middleware import auth_dependency
+from ..models.plan import Plan
+from ..services import plan_service
 
-router = APIRouter(
-    #prefix="plan"
-)
+router = APIRouter()
 
 @router.get("/plans", dependencies=[Depends(auth_dependency)])
-def get_plans(request: Request, session: Session = Depends(get_session)):
-    plans = get_plans(request.state.user.id, session)
+def get_plans(request: Request, session: Annotated[Session, Depends(get_session)]) -> dict[str, Sequence[Plan]]:
+    plans = plan_service.get_plans(request.state.user.id, session)
     return {"plans":plans}

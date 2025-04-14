@@ -1,13 +1,16 @@
 import os
+from typing import Annotated
 
 from clerk_backend_api import Clerk
 from clerk_backend_api.jwks_helpers import AuthenticateRequestOptions, RequestState
-from fastapi import HTTPException, Request
+from fastapi import Depends, HTTPException, Request
+from sqlmodel import Session
 
-from ..services.user_service import get_user_by_clerk_id, create_user
+from ..database import get_session
+from ..services.user_service import create_user, get_user_by_clerk_id
 
 
-def auth_dependency(request: Request, ) -> RequestState:
+def auth_dependency(request: Request, session: Annotated[Session, Depends(get_session)]) -> RequestState:
     authorization = request.headers.get("Authorization")
 
     if not authorization:
@@ -22,8 +25,7 @@ def auth_dependency(request: Request, ) -> RequestState:
     if not request_state.is_signed_in:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
-    #TODO
-    request.state.user = get_user_by_clerk_id(request_state.payload["sub"])
+    request.state.user = get_user_by_clerk_id(request_state.payload["sub"], session)
 
     if request.state.user is not None:
         return request_state
@@ -33,8 +35,6 @@ def auth_dependency(request: Request, ) -> RequestState:
     if sdk_user is None:
         raise HTTPException(status_code=401, detail="User not found")
 
-
-    #TODO
-    request.state.user = create_user(clerk_id=request_state.payload["sub"], email=sdk_user.email_addresses[0].email_address)
+    request.state.user = create_user(request_state.payload["sub"], sdk_user.email_addresses[0].email_address, session)
 
     return request_state

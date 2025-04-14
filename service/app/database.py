@@ -1,18 +1,18 @@
 import os
-from typing import Generator
+from collections.abc import Generator
 
 from dotenv import load_dotenv
-from sqlmodel import SQLModel, Session, create_engine
+from sqlmodel import Session, SQLModel, create_engine
 
 load_dotenv()
 
 postgres_url = f"postgresql+psycopg://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
-print(os.getenv('POSTGRES_PASSWORD'))
+print(os.getenv("POSTGRES_PASSWORD"))
 engine = create_engine(postgres_url, echo=True)
 
 def create_db_and_tables() -> None:
     SQLModel.metadata.create_all(engine)
 
-def get_session() -> Generator[Session, any, None]:
+def get_session() -> Generator[Session, any]:
     with Session(engine) as session:
         yield session
