@@ -22,6 +22,7 @@ app.add_middleware(
 
 app.include_router(plan_router.router)
 
+
 @app.get("/")
 async def root() -> dict[str, str]:
     return {"message": "OSTDependency backend"}

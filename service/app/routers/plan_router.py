@@ -11,7 +11,10 @@ from ..services import plan_service
 
 router = APIRouter()
 
+
 @router.get("/plans", dependencies=[Depends(auth_dependency)])
-async def get_plans(request: Request, session: Annotated[Session, Depends(get_session)]) -> dict[str, Sequence[PlanRead]]:
+async def get_plans(
+    request: Request, session: Annotated[Session, Depends(get_session)]
+) -> dict[str, Sequence[PlanRead]]:
     plans = plan_service.get_plans(request.state.user.id, session)
-    return {"plans":plans}
+    return {"plans": plans}

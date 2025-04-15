@@ -1,7 +1,8 @@
-from datetime import datetime
 import uuid
+from datetime import datetime
 
 from sqlmodel import SQLModel
+
 
 class PlanRead(SQLModel):
     id: uuid.UUID
