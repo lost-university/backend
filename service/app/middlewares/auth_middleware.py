@@ -10,7 +10,7 @@ from ..database import get_session
 from ..services.user_service import create_user, get_user_by_clerk_id
 
 
-def auth_dependency(request: Request, session: Annotated[Session, Depends(get_session)]) -> RequestState:
+async def auth_dependency(request: Request, session: Annotated[Session, Depends(get_session)]) -> RequestState:
     authorization = request.headers.get("Authorization")
 
     if not authorization:
