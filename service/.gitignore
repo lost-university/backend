@@ -16,6 +16,9 @@ venv/
 # Ruff stuff
 .ruff_cache/
 
+# Pytest stuf
+.pytest_cache/
+
 # Editor directories and files
 .idea
 .vscode
