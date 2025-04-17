@@ -659,13 +659,13 @@ dependencies = [
     { name = "clerk-backend-api" },
     { name = "fastapi", extra = ["standard"] },
     { name = "psycopg", extra = ["binary", "pool"] },
-    { name = "pytest-cov" },
     { name = "sqlmodel" },
 ]
 
 [package.dev-dependencies]
 dev = [
     { name = "pytest" },
+    { name = "pytest-cov" },
     { name = "ruff" },
 ]
 
@@ -674,13 +674,13 @@ requires-dist = [
     { name = "clerk-backend-api" },
     { name = "fastapi", extras = ["standard"], specifier = ">=0.115.12" },
     { name = "psycopg", extras = ["binary", "pool"], specifier = ">=3.2.6" },
-    { name = "pytest-cov", specifier = ">=6.1.1" },
     { name = "sqlmodel", specifier = ">=0.0.24" },
 ]
 
 [package.metadata.requires-dev]
 dev = [
     { name = "pytest", specifier = ">=8.3.5" },
+    { name = "pytest-cov", specifier = ">=6.1.1" },
     { name = "ruff", specifier = ">=0.11.2" },
 ]
 
