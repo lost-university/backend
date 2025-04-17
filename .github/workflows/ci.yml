@@ -58,7 +58,7 @@ jobs:
           path: service/htmlcov
       - name: Check coverage
         working-directory: service
-        run: coverage report --fail-under=$MIN_COVERAGE
+        run: uv run coverage report --fail-under=$MIN_COVERAGE
 
   build:
     runs-on: ubuntu-latest
