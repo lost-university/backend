@@ -9,6 +9,9 @@ on:
     tags:
       - '*'
 
+env:
+  MIN_COVERAGE: 68
+
 jobs:
   lint-test:
     runs-on: ubuntu-latest
@@ -47,7 +50,15 @@ jobs:
           echo "POSTGRES_DB=postgres" >> $GITHUB_ENV
       - name: Run tests
         working-directory: service
-        run: uv run pytest
+        run: uv run pytest --cov=app --cov-report=html
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: service/htmlcov
+      - name: Check coverage
+        working-directory: service
+        run: coverage report --fail-under=$MIN_COVERAGE
 
   build:
     runs-on: ubuntu-latest
@@ -79,4 +90,3 @@ jobs:
           context: ./service
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-
