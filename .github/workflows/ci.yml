@@ -1,0 +1,54 @@
+name: CI
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  lint-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+      - name: Install dependencies
+        working-directory: service
+        run: uv sync --frozen --no-cache
+      - name: Run ruff
+        working-directory: service
+        run: uv run ruff format --check
+      - name: Run tests
+        working-directory: service
+        run: uv run pytest
+
+  build:
+    runs-on: ubuntu-latest
+    needs: lint-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            ghcr.io/${{ github.repository }}/backend
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=sha,format=long
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: ./service
+          push: false
+          tags: ${{ steps.meta.outputs.tags }}
+
