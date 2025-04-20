@@ -10,6 +10,6 @@ class PlanRead(SQLModel):
     name: str
     content: str
     public_slug: str
-    is_favourite: bool
+    is_favorite: bool
     created_at: datetime
     user_id: uuid.UUID
