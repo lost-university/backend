@@ -18,3 +18,20 @@ async def get_plans(
 ) -> dict[str, Sequence[PlanRead]]:
     plans = plan_service.get_plans(request.state.user.id, session)
     return {"plans": plans}
+
+
+@router.post("/plans", dependencies=[Depends(auth_dependency)], status_code=status.HTTP_201_CREATED)
+async def create_plan(
+    plan_data: PlanCreate,
+    request: Request,
+    session: Annotated[Session, Depends(get_session)]
+) -> PlanRead:
+    plan = Plan(**plan_data.dict(), user_id=request.state.user.id)
+    try:
+        created_plan = plan_service.write_plan(plan, session)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Failed to create plan"
+        ) from e
+    return PlanRead.from_orm(created_plan)
