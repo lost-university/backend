@@ -26,9 +26,8 @@ async def create_plan(
     request: Request,
     session: Annotated[Session, Depends(get_session)]
 ) -> PlanRead:
-    plan = Plan(**plan_data.dict(), user_id=request.state.user.id)
     try:
-        created_plan = plan_service.write_plan(plan, session)
+        created_plan = plan_service.write_plan(plan_data, session)
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
