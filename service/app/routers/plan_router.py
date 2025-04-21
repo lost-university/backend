@@ -1,12 +1,12 @@
 from collections.abc import Sequence
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Request, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlmodel import Session
 
 from ..database import get_session
 from ..middlewares.auth_middleware import auth_dependency
-from ..schemas.plan import PlanRead, PlanCreate
+from ..schemas.plan import PlanCreate, PlanRead
 from ..services import plan_service
 
 router = APIRouter()
