@@ -21,9 +21,9 @@ async def get_plans(
 
 
 @router.post("/api/plan", dependencies=[Depends(auth_dependency)], status_code=201)
-async def create_plan(plan_data: PlanCreate, session: Annotated[Session, Depends(get_session)]) -> PlanRead:
+async def create_plan(request: Request, plan_data: PlanCreate, session: Annotated[Session, Depends(get_session)]) -> PlanRead:
     try:
-        created_plan = plan_service.write_plan(plan_data, session)
+        created_plan = plan_service.write_plan(request.state.user.id, plan_data, session)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create plan: {str(e)}") from e
     return PlanRead.model_validate(created_plan)
