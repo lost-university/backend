@@ -15,7 +15,4 @@ class PlanRead(SQLModel):
 
 
 class PlanCreate(SQLModel):
-    name: str
     content: str
-    is_favorite: bool
-    user_id: UUID
