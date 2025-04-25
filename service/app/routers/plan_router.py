@@ -25,5 +25,5 @@ async def create_plan(plan_data: PlanCreate, session: Annotated[Session, Depends
     try:
         created_plan = plan_service.write_plan(plan_data, session)
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Failed to create plan") from e
+        raise HTTPException(status_code=500, detail=f"Failed to create plan: {str(e)}") from e
     return PlanRead.model_validate(created_plan)
