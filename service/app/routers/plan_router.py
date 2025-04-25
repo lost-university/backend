@@ -12,7 +12,7 @@ from ..services import plan_service
 router = APIRouter()
 
 
-@router.get("/plans", dependencies=[Depends(auth_dependency)])
+@router.get("/api/plans", dependencies=[Depends(auth_dependency)])
 async def get_plans(
     request: Request, session: Annotated[Session, Depends(get_session)]
 ) -> dict[str, Sequence[PlanRead]]:
@@ -20,7 +20,7 @@ async def get_plans(
     return {"plans": plans}
 
 
-@router.post("/plans", dependencies=[Depends(auth_dependency)], status_code=201)
+@router.post("/api/plan", dependencies=[Depends(auth_dependency)], status_code=201)
 async def create_plan(plan_data: PlanCreate, session: Annotated[Session, Depends(get_session)]) -> PlanRead:
     try:
         created_plan = plan_service.write_plan(plan_data, session)
