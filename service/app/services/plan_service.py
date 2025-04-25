@@ -13,8 +13,12 @@ def get_plans(plan_id: UUID, session: Session) -> Sequence[Plan]:
     return session.exec(statement).all()
 
 
-def write_plan(plan_data: PlanCreate, session: Session) -> Plan:
-    plan = Plan(**plan_data.model_dump())
+def write_plan(user_id: UUID, plan_data: PlanCreate, session: Session) -> Plan:
+    plan_dict = plan_data.model_dump()  # Convert PlanCreate to a dictionary
+    plan_dict["name"] = "name field not implemented yet"
+    plan_dict["favorite"] = False
+    plan_dict["user_id"] = user_id
+    plan = Plan(**plan_dict)
     session.add(plan)
     session.commit()
     session.refresh(plan)
