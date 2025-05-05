@@ -15,4 +15,5 @@ class PlanRead(SQLModel):
 
 
 class PlanCreate(SQLModel):
+    name: str
     content: str

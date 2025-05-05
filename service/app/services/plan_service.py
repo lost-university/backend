@@ -15,7 +15,6 @@ def get_plans(plan_id: UUID, session: Session) -> Sequence[Plan]:
 
 def write_plan(user_id: UUID, plan_data: PlanCreate, session: Session) -> Plan:
     plan_dict = plan_data.model_dump()  # Convert PlanCreate to a dictionary
-    plan_dict["name"] = "name field not implemented yet"
     plan_dict["user_id"] = user_id
     plan = Plan(**plan_dict)
     session.add(plan)
