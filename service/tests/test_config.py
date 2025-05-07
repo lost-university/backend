@@ -5,13 +5,14 @@ This module provides fixtures and utilities for testing the application.
 """
 
 import os
+from typing import Annotated
 import uuid
 from unittest.mock import MagicMock, patch
 from clerk_backend_api import Clerk
 
 import pytest
 from fastapi.testclient import TestClient
-from fastapi import Request
+from fastapi import Request, Depends
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
 
@@ -38,6 +39,8 @@ def engine_fixture():
     SQLModel.metadata.create_all(engine)
     return engine
 
+def get_session(session_fixture):
+    yield session_fixture
 
 @pytest.fixture(name="session")
 def session_fixture(engine):
@@ -66,18 +69,18 @@ def test_plan_fixture(user, session):
         is_favorite=False,
         user_id=user.id
     )
-
     session.add(plan)
     session.commit()
     session.refresh(plan)
     return plan
 
 
-async def override_auth_dependency(mock_user: User, request: Request, session: Session) -> Request:
+async def override_auth_dependency(session: Annotated[Session, Depends(get_session)]) -> Request:
     session.add(mock_user)
     session.commit()
-    session.refresh(mock_user)
-
+    user = session.refresh(mock_user)
+    request: Request
+    request.state.user = user
     return request
 
 
