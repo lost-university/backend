@@ -46,7 +46,7 @@ jobs:
         run: uv run ruff check
       - name: Set Envs
         run: |
-          echo "POSTGRES_HOST=postgres" >> $GITHUB_ENV
+          echo "POSTGRES_HOST=localhost" >> $GITHUB_ENV
           echo "POSTGRES_PORT=5432" >> $GITHUB_ENV
           echo "POSTGRES_USER=postgres" >> $GITHUB_ENV
           echo "POSTGRES_PASSWORD=postgres" >> $GITHUB_ENV
