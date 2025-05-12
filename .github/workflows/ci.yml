@@ -47,16 +47,14 @@ jobs:
       - name: Set Envs
         working-directory: service
         run: |
-          cat <<EOF > .env
-          POSTGRES_HOST=postgres
-          POSTGRES_PORT=5432
-          POSTGRES_USER=postgres
-          POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB=postgres
-          EOF
+          echo "POSTGRES_HOST=postgres" >> $GITHUB_ENV
+          echo "POSTGRES_PORT=5432" >> $GITHUB_ENV
+          echo "POSTGRES_USER=postgres" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
+          echo "POSTGRES_DB=postgres" >> $GITHUB_ENV
       - name: Run tests
         working-directory: service
-        run: uv run pytest --cov=app --cov-report=html
+        run: run pytest --cov=app --cov-report=html
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         with:
