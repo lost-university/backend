@@ -10,6 +10,7 @@ postgres_url = f"postgresql+psycopg://{os.getenv('POSTGRES_USER')}:{os.getenv('P
 engine = create_engine(postgres_url, echo=True)
 print(postgres_url)
 
+
 def create_db_and_tables() -> None:
     SQLModel.metadata.create_all(engine)
 
