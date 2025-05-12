@@ -7,7 +7,19 @@ def test_get_plans(test_client, get_valid_auth_header):
     data = response.json()
     assert len(data["plans"]) == 0
 
-def test_create_plan(test_client):
+def test_get_plans_fails_without_authorization_token(test_client, get_valid_auth_header):
+    header = {
+        "Authorization": "invalid_token"
+    }
+
+    response = test_client.get("/api/plans", headers=header)
+    assert response.status_code == 401
+    assert response.json() == {"detail": "Unauthorized"}
+
+    response = test_client.get("/api/plans")
+    assert response.status_code == 401
+    assert response.json() == {"detail": "Authorization header missing"}
+
 def test_create_plan(test_client, get_valid_auth_header):
     request_data = {
         "name": "Test Plan",
