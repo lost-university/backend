@@ -1,5 +1,6 @@
 import uuid
 
+
 def test_get_plans(test_client, get_valid_auth_header):
     header = get_valid_auth_header
     response = test_client.get("/api/plans", headers=header)
@@ -7,10 +8,9 @@ def test_get_plans(test_client, get_valid_auth_header):
     data = response.json()
     assert len(data["plans"]) == 0
 
+
 def test_get_plans_fails_without_authorization_token(test_client, get_valid_auth_header):
-    header = {
-        "Authorization": "invalid_token"
-    }
+    header = {"Authorization": "invalid_token"}
 
     response = test_client.get("/api/plans", headers=header)
     assert response.status_code == 401
@@ -20,16 +20,15 @@ def test_get_plans_fails_without_authorization_token(test_client, get_valid_auth
     assert response.status_code == 401
     assert response.json() == {"detail": "Authorization header missing"}
 
+
 def test_create_plan(test_client, get_valid_auth_header):
-    request_data = {
-        "name": "Test Plan",
-        "content": "Test COntent"
-    }
+    request_data = {"name": "Test Plan", "content": "Test COntent"}
 
     response = test_client.post("/api/plan", json=request_data, headers=get_valid_auth_header)
     assert response.status_code == 201
     data = response.json()
     assert data["name"] == request_data["name"]
+
 
 def test_create_plan_fails_with_unprocessable_data(test_client, get_valid_auth_header):
     request_data = {
@@ -38,11 +37,9 @@ def test_create_plan_fails_with_unprocessable_data(test_client, get_valid_auth_h
     response = test_client.post("/api/plan", json=request_data, headers=get_valid_auth_header)
     assert response.status_code == 422
 
+
 def test_delete_plan(test_client, get_valid_auth_header):
-    request_data = {
-        "name": "Test Plan",
-        "content": "Test COntent"
-    }
+    request_data = {"name": "Test Plan", "content": "Test COntent"}
     response = test_client.post("/api/plan", json=request_data, headers=get_valid_auth_header)
     assert response.status_code == 201
     data = response.json()
@@ -61,11 +58,9 @@ def test_delete_plan(test_client, get_valid_auth_header):
     data = response.json()
     assert len(data["plans"]) == 0
 
+
 def test_delete_nonexisting_plan(test_client, get_valid_auth_header):
-    request_data = {
-        "name": "Test Plan",
-        "content": "Test Content"
-    }
+    request_data = {"name": "Test Plan", "content": "Test Content"}
     response = test_client.post("/api/plan", json=request_data, headers=get_valid_auth_header)
     assert response.status_code == 201
 

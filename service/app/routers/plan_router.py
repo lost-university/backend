@@ -22,7 +22,9 @@ async def get_plans(
 
 
 @router.post("/api/plan", dependencies=[Depends(auth_dependency)], status_code=201)
-async def create_plan(request: Request, plan_data: PlanCreate, session: Annotated[Session, Depends(get_session)]) -> PlanRead:
+async def create_plan(
+    request: Request, plan_data: PlanCreate, session: Annotated[Session, Depends(get_session)]
+) -> PlanRead:
     try:
         created_plan = plan_service.write_plan(request.state.user.id, plan_data, session)
     except Exception as e:
@@ -31,9 +33,7 @@ async def create_plan(request: Request, plan_data: PlanCreate, session: Annotate
 
 
 @router.delete("/api/plan/{plan_id}", dependencies=[Depends(auth_dependency)], status_code=204)
-async def delete_plan(
-    request: Request, plan_id: UUID, session: Annotated[Session, Depends(get_session)]
-) -> None:
+async def delete_plan(request: Request, plan_id: UUID, session: Annotated[Session, Depends(get_session)]) -> None:
     try:
         plan_service.delete_plan(request.state.user.id, plan_id, session)
     except ValueError as e:

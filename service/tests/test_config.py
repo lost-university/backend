@@ -11,8 +11,9 @@ from app.middlewares.auth_middleware import auth_dependency
 from app.services.user_service import create_user, get_user_by_clerk_id
 
 
-CLERKID="test_clerk_id"
-AUTH_TOKEN="test_auth_token"
+CLERKID = "test_clerk_id"
+AUTH_TOKEN = "test_auth_token"
+
 
 @pytest.fixture(scope="function", autouse=True)
 def db_session():
@@ -20,15 +21,16 @@ def db_session():
     yield
     drop_tables()
 
+
 @pytest.fixture
 def test_client():
     return TestClient(app)
 
+
 @pytest.fixture
 def get_valid_auth_header():
-    return {
-    "Authorization": f"{AUTH_TOKEN}"
-}
+    return {"Authorization": f"{AUTH_TOKEN}"}
+
 
 async def override_auth_dependency(request: Request, session: Annotated[Session, Depends(get_session)]) -> Request:
     authorization = request.headers.get("Authorization")
@@ -44,5 +46,6 @@ async def override_auth_dependency(request: Request, session: Annotated[Session,
 
     request.state.user = user
     return request
+
 
 app.dependency_overrides[auth_dependency] = override_auth_dependency
