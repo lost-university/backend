@@ -14,6 +14,13 @@ def test_create_plan(test_client):
     data = response.json()
     assert data["name"] == request_data["name"]
 
+def test_create_plan_fails_with_unprocessable_data(test_client):
+    request_data = {
+        "name": "Test Plan",
+    }
+    response = test_client.post("/api/plan", json=request_data)
+    assert response.status_code == 422
+
 def test_delete_plan(test_client):
     request_data = {
         "name": "Test Plan",
