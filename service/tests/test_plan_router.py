@@ -23,8 +23,7 @@ def test_get_plans_fails_without_authorization_token(test_client: TestClient) ->
     assert response.json() == {"detail": "Authorization header missing"}
 
 
-def test_create_plan(test_client: TestClient,
-                     get_valid_auth_header: dict[str, str]) -> None:
+def test_create_plan(test_client: TestClient, get_valid_auth_header: dict[str, str]) -> None:
     request_data = {"name": "Test Plan", "content": "Test COntent"}
 
     response = test_client.post("/api/plan", json=request_data, headers=get_valid_auth_header)
@@ -33,8 +32,9 @@ def test_create_plan(test_client: TestClient,
     assert data["name"] == request_data["name"]
 
 
-def test_create_plan_fails_with_unprocessable_data(test_client: TestClient,
-                                                   get_valid_auth_header: dict[str, str]) -> None:
+def test_create_plan_fails_with_unprocessable_data(
+    test_client: TestClient, get_valid_auth_header: dict[str, str]
+) -> None:
     request_data = {
         "name": "Test Plan",
     }
