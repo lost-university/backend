@@ -1,7 +1,7 @@
 from typing import Annotated
 
 import pytest
-from fastapi import Depends, Request
+from fastapi import Depends, Request, HTTPException
 from sqlmodel import Session
 from fastapi.testclient import TestClient
 
@@ -12,6 +12,7 @@ from app.services.user_service import create_user, get_user_by_clerk_id
 
 
 CLERKID="test_clerk_id"
+AUTH_TOKEN="test_auth_token"
 
 @pytest.fixture(scope="function", autouse=True)
 def db_session():
@@ -23,7 +24,21 @@ def db_session():
 def test_client():
     return TestClient(app)
 
+@pytest.fixture
+def get_valid_auth_header():
+    return {
+    "Authorization": f"{AUTH_TOKEN}"
+}
+
 async def override_auth_dependency(request: Request, session: Annotated[Session, Depends(get_session)]) -> Request:
+    authorization = request.headers.get("Authorization")
+    print(authorization)
+
+    if not authorization:
+        raise HTTPException(status_code=401, detail="Authorization header missing")
+    if authorization != AUTH_TOKEN:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
     create_user(CLERKID, "test@email.com", session)
     user = get_user_by_clerk_id("test_clerk_id", session)
 
