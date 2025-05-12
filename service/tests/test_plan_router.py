@@ -1,3 +1,5 @@
+import uuid
+
 def test_get_plans(test_client):
     response = test_client.get("/api/plans")
     assert response.status_code == 200
@@ -43,3 +45,24 @@ def test_delete_plan(test_client):
     assert response.status_code == 200
     data = response.json()
     assert len(data["plans"]) == 0
+
+def test_delete_nonexisting_plan(test_client):
+    request_data = {
+        "name": "Test Plan",
+        "content": "Test Content"
+    }
+    response = test_client.post("/api/plan", json=request_data)
+    assert response.status_code == 201
+
+    response = test_client.get("/api/plans")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["plans"]) == 1
+
+    response = test_client.delete(f"/api/plan/{uuid.uuid4()}")
+    assert response.status_code == 404
+
+    response = test_client.get("/api/plans")
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["plans"]) == 1
