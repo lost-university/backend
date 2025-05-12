@@ -28,7 +28,7 @@ async def create_plan(
     try:
         created_plan = plan_service.write_plan(request.state.user.id, plan_data, session)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to create plan: {str(e)}") from e
+        raise HTTPException(status_code=500, detail=f"Failed to create plan: {e!s}") from e
     return PlanRead.model_validate(created_plan)
 
 
@@ -37,4 +37,4 @@ async def delete_plan(request: Request, plan_id: UUID, session: Annotated[Sessio
     try:
         plan_service.delete_plan(request.state.user.id, plan_id, session)
     except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
+        raise HTTPException(status_code=404, detail=str(e)) from e

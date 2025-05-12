@@ -26,6 +26,7 @@ def write_plan(user_id: UUID, plan_data: PlanCreate, session: Session) -> Plan:
 def delete_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
     plan = session.get(Plan, plan_id)
     if not plan or plan.user_id != user_id:
-        raise ValueError("Plan not found or access denied")
+        error_msg = "Plan not found or access denied"
+        raise ValueError(error_msg)
     session.delete(plan)
     session.commit()

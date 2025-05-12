@@ -1,35 +1,35 @@
+from collections.abc import Iterator
 from typing import Annotated
 
 import pytest
-from fastapi import Depends, Request, HTTPException
-from sqlmodel import Session
+from fastapi import Depends, HTTPException, Request
 from fastapi.testclient import TestClient
+from sqlmodel import Session
 
+from app.database import create_db_and_tables, drop_tables, get_session
 from app.main import app
-from app.database import get_session, create_db_and_tables, drop_tables
 from app.middlewares.auth_middleware import auth_dependency
 from app.services.user_service import create_user, get_user_by_clerk_id
 
-
 CLERKID = "test_clerk_id"
-AUTH_TOKEN = "test_auth_token"
+TEST_AUTH = "test_auth_token"
 
 
-@pytest.fixture(scope="function", autouse=True)
-def db_session():
+@pytest.fixture(autouse=True)
+def db_session() -> Iterator[None]:
     create_db_and_tables()
     yield
     drop_tables()
 
 
 @pytest.fixture
-def test_client():
+def test_client() -> TestClient:
     return TestClient(app)
 
 
 @pytest.fixture
-def get_valid_auth_header():
-    return {"Authorization": f"{AUTH_TOKEN}"}
+def get_valid_auth_header() -> dict[str, str]:
+    return {"Authorization": f"{TEST_AUTH}"}
 
 
 async def override_auth_dependency(request: Request, session: Annotated[Session, Depends(get_session)]) -> Request:
@@ -38,7 +38,7 @@ async def override_auth_dependency(request: Request, session: Annotated[Session,
 
     if not authorization:
         raise HTTPException(status_code=401, detail="Authorization header missing")
-    if authorization != AUTH_TOKEN:
+    if authorization != TEST_AUTH:
         raise HTTPException(status_code=401, detail="Unauthorized")
 
     create_user(CLERKID, "test@email.com", session)
