@@ -7,8 +7,8 @@ from ..models.plan import Plan
 from ..schemas.plan import PlanCreate, PlanRead
 
 
-def get_plans(plan_id: UUID, session: Session) -> Sequence[Plan]:
-    statement = select(Plan).where(Plan.user_id == plan_id)
+def get_plans(user_id: UUID, session: Session) -> Sequence[PlanRead]:
+    statement = select(Plan).where(Plan.user_id == user_id)
 
     plans = session.exec(statement).all()
     return [PlanRead.model_validate(plan) for plan in plans]
