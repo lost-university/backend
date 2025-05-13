@@ -29,7 +29,7 @@ async def create_plan(
         created_plan = plan_service.write_plan(request.state.user.id, plan_data, session)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to create plan: {e!s}") from e
-    return PlanRead.model_validate(created_plan)
+    return created_plan
 
 
 @router.delete("/api/plan/{plan_id}", dependencies=[Depends(auth_dependency)], status_code=204)
