@@ -4,23 +4,24 @@ from uuid import UUID
 from sqlmodel import Session, select
 
 from ..models.plan import Plan
-from ..schemas.plan import PlanCreate
+from ..schemas.plan import PlanCreate, PlanRead
 
 
 def get_plans(plan_id: UUID, session: Session) -> Sequence[Plan]:
     statement = select(Plan).where(Plan.user_id == plan_id)
 
-    return session.exec(statement).all()
+    plans = session.exec(statement).all()
+    return [PlanRead.model_validate(plan) for plan in plans]
 
 
-def write_plan(user_id: UUID, plan_data: PlanCreate, session: Session) -> Plan:
+def write_plan(user_id: UUID, plan_data: PlanCreate, session: Session) -> PlanRead:
     plan_dict = plan_data.model_dump()  # Convert PlanCreate to a dictionary
     plan_dict["user_id"] = user_id
-    plan = Plan(**plan_dict)
-    session.add(plan)
+    created_plan = Plan(**plan_dict)
+    session.add(created_plan)
     session.commit()
-    session.refresh(plan)
-    return plan
+    session.refresh(created_plan)
+    return PlanRead.model_validate(created_plan)
 
 
 def delete_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
