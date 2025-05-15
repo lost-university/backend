@@ -1,4 +1,5 @@
 from database import create_db_and_tables
+from models import plan,user
 
 # Import models so their metadata is registered with SQLModel
 from models import plan, user  # noqa: F401
