@@ -78,7 +78,6 @@ def delete_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
         session.delete(plan)
         session.commit()
 
-
 def create_public_slug(group_id: UUID) -> str:
     slug = base64.urlsafe_b64encode(group_id.bytes).rstrip(b'=').decode('ascii')
     return slug
@@ -103,3 +102,15 @@ def bookmark_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
     plan = session.get(Plan, plan_id)
     
     return None 
+
+def bookmark_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
+    plan = session.get(Plan, plan_id)
+    if not plan or plan.user_id != user_id:
+        error_msg = "Plan not found or access denied"
+        raise ValueError(error_msg)
+
+    plan.bookmark = not plan.bookmark
+    session.add(plan)
+    session.commit()
+    session.refresh(plan)
+
