@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import Session, SQLModel, create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlmodel import Session, SQLModel, create_engine
 
 load_dotenv()
 
