@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 import uuid
 import pytest
 from fastapi.testclient import TestClient
