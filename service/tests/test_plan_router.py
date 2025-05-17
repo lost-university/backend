@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 import uuid
 import pytest
 from fastapi.testclient import TestClient
@@ -82,6 +83,8 @@ class TestBadDB:
         response = test_client.get(f"/plans/history/{uuid.uuid4()}")
         assert response.status_code == 500
 
+    def test_create_plan(self, test_client: TestClient, overwrite_session_dependency: Iterator[None]) -> None:
+        request_data = {"name": "Test Plan", "content": "Test Content"}
 
 class TestPublicSlug:
     def test_get_plan_by_public_slug(self, test_client: TestClient) -> None:
