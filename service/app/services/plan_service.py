@@ -98,3 +98,8 @@ def update_plan(user_id: UUID, plan_id: UUID, plan_data: PlanUpdate, session: Se
     session.commit()
     session.refresh(new_plan)
     return PlanRead.model_validate(new_plan)
+
+def bookmark_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
+    plan = session.get(Plan, plan_id)
+    
+    return None 
