@@ -49,10 +49,6 @@ class TestDeletePlan:
         assert len(response.json()["plans"]) == 0
 
     def test_delete_nonexisting_plan(self, test_client: TestClient) -> None:
-        response = test_client.get("/plans")
-        assert response.status_code == 200
-        assert len(response.json()["plans"]) == 0
-
         response = test_client.delete(f"/plans/{uuid.uuid4()}")
         assert response.status_code == 404
 
@@ -61,6 +57,10 @@ class TestDeletePlan:
 class TestBadDB:
     def test_get_plans(self, test_client: TestClient) -> None:
         response = test_client.get("/plans")
+        assert response.status_code == 500
+
+    def test_get_plan(self, test_client: TestClient) -> None:
+        response = test_client.get("/plans/testSlug")
         assert response.status_code == 500
 
     def test_create_plan(self, test_client: TestClient) -> None:
@@ -72,3 +72,22 @@ class TestBadDB:
     def test_delete_plan(self, test_client: TestClient) -> None:
         response = test_client.delete(f"/plans/{uuid.uuid4()}")
         assert response.status_code == 500
+
+
+class TestPublicSlug:
+    def test_get_plan_by_public_slug(self, test_client: TestClient) -> None:
+        request_data = {"name": "Test Plan", "content": "Test Content"}
+
+        response = test_client.post("/plans", json=request_data)
+        assert response.status_code == 201
+        public_slug = response.json()["public_slug"]
+
+        response = test_client.get(f"/plans/{public_slug}")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["name"] == request_data["name"]
+        assert data["content"] == request_data["content"]
+
+    def test_get_nonexisting_plan(self, test_client: TestClient) -> None:
+        response = test_client.get(f"/plans/SLUG")
+        assert response.status_code == 404

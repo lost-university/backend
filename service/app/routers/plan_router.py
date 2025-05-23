@@ -20,8 +20,19 @@ async def get_plans(
     try:
         plans = plan_service.get_plans(request.state.user.id, session)
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Failed to delete plan. Please report to page-admin") from e
+        raise HTTPException(status_code=500, detail="Failed to get plans. Please report to page-admin") from e
     return {"plans": plans}
+
+
+@router.get("/plans/{public_slug}")
+async def get_plan_by_public_slug(public_slug: str, session: Annotated[Session, Depends(get_session)]) -> PlanRead:
+    try:
+        plan = plan_service.get_plan_by_public_slug(public_slug, session)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e)) from e
+    except Exception as e:
+        raise HTTPException(status_code=500, detail="Failed to get plan. Please report to page-admin") from e
+    return plan
 
 
 @router.post("/plans", dependencies=[Depends(auth_dependency)], status_code=201)
