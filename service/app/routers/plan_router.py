@@ -24,7 +24,7 @@ async def get_plans(
     return {"plans": plans}
 
 
-@router.get("/plans/{public_slug}")
+@router.get("/plans/shared/{public_slug}")
 async def get_plan_by_public_slug(public_slug: str, session: Annotated[Session, Depends(get_session)]) -> PlanRead:
     try:
         plan = plan_service.get_plan_by_public_slug(public_slug, session)

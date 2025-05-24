@@ -60,7 +60,7 @@ class TestBadDB:
         assert response.status_code == 500
 
     def test_get_plan(self, test_client: TestClient) -> None:
-        response = test_client.get("/plans/testSlug")
+        response = test_client.get("/plans/shared/testSlug")
         assert response.status_code == 500
 
     def test_create_plan(self, test_client: TestClient) -> None:
@@ -82,12 +82,12 @@ class TestPublicSlug:
         assert response.status_code == 201
         public_slug = response.json()["public_slug"]
 
-        response = test_client.get(f"/plans/{public_slug}")
+        response = test_client.get(f"/plans/shared/{public_slug}")
         assert response.status_code == 200
         data = response.json()
         assert data["name"] == request_data["name"]
         assert data["content"] == request_data["content"]
 
     def test_get_nonexisting_plan(self, test_client: TestClient) -> None:
-        response = test_client.get(f"/plans/SLUG")
+        response = test_client.get(f"/plans/shared/testSlug")
         assert response.status_code == 404
