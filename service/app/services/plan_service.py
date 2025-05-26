@@ -100,11 +100,6 @@ def update_plan(user_id: UUID, plan_id: UUID, plan_data: PlanUpdate, session: Se
 
 def bookmark_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
     plan = session.get(Plan, plan_id)
-    
-    return None 
-
-def bookmark_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
-    plan = session.get(Plan, plan_id)
     if not plan:
         raise ValueError(f"Plan with ID {plan_id} not found.")
     if plan.user_id != user_id:
