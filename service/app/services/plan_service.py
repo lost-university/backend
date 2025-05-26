@@ -101,9 +101,11 @@ def update_plan(user_id: UUID, plan_id: UUID, plan_data: PlanUpdate, session: Se
 def bookmark_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
     plan = session.get(Plan, plan_id)
     if not plan:
-        raise ValueError(f"Plan with ID {plan_id} not found.")
+        error_msg = f"Plan {plan_id} not found."
+        raise ValueError(error_msg)
     if plan.user_id != user_id:
-        raise ValueError("Access denied: You do not own this plan.")
+        error_msg = "Plan not found or access denied"
+        raise ValueError(error_msg)
 
     plan.bookmark = not plan.bookmark
     session.add(plan)
