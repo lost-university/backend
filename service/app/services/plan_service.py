@@ -111,4 +111,3 @@ def bookmark_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
     session.add(plan)
     session.commit()
     session.refresh(plan)
-
