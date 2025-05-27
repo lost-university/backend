@@ -3,12 +3,15 @@ from typing import Annotated
 
 from clerk_backend_api import Clerk
 from clerk_backend_api.jwks_helpers import AuthenticateRequestOptions, RequestState
+from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, Request
 from sqlmodel import Session
 
 from ..database import get_session
 from ..services.user_service import create_user, get_user_by_clerk_id
 
+
+load_dotenv()
 
 async def auth_dependency(request: Request, session: Annotated[Session, Depends(get_session)]) -> RequestState:
     authorization = request.headers.get("Authorization")
@@ -19,7 +22,7 @@ async def auth_dependency(request: Request, session: Annotated[Session, Depends(
     sdk = Clerk(bearer_auth=os.getenv("CLERK_SECRET_KEY"))
 
     request_state = sdk.authenticate_request(
-        request, AuthenticateRequestOptions(authorized_parties=["http://localhost:5173"])
+        request, AuthenticateRequestOptions(authorized_parties=os.getenv("AUTHORIZED_PARTIES").split(","))
     )
 
     if not request_state.is_signed_in:
