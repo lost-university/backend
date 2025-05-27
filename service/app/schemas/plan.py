@@ -10,7 +10,7 @@ class PlanRead(SQLModel):
     name: str
     content: str
     public_slug: str
-    is_favorite: bool
+    bookmark: bool
     created_at: datetime
     user_id: UUID
 

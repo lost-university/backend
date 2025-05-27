@@ -90,7 +90,7 @@ def update_plan(user_id: UUID, plan_id: UUID, plan_data: PlanUpdate, session: Se
         "name": current_plan.name,
         "content": plan_data.content,
         "public_slug": current_plan.public_slug,
-        "is_favorite": current_plan.is_favorite,
+        "bookmark": current_plan.bookmark,
         "user_id": user_id
     }
     new_plan = Plan(**new_plan_data)
