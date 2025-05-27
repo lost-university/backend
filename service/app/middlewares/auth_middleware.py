@@ -10,8 +10,8 @@ from sqlmodel import Session
 from ..database import get_session
 from ..services.user_service import create_user, get_user_by_clerk_id
 
-
 load_dotenv()
+
 
 async def auth_dependency(request: Request, session: Annotated[Session, Depends(get_session)]) -> RequestState:
     authorization = request.headers.get("Authorization")

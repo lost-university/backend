@@ -6,7 +6,6 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .routers import plan_router
 
-
 load_dotenv()
 app = FastAPI()
 
