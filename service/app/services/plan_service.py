@@ -106,3 +106,8 @@ def bookmark_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
     if plan.user_id != user_id:
         error_msg = "Plan not found or access denied"
         raise ValueError(error_msg)
+
+    plan.bookmark = not plan.bookmark
+    session.add(plan)
+    session.commit()
+    session.refresh(plan)
