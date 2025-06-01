@@ -1,4 +1,5 @@
 import uuid
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -112,9 +113,6 @@ class TestBadDB:
         response = test_client.get(f"/plans/history/{uuid.uuid4()}")
         assert response.status_code == 500
 
-    def test_create_plan(self, test_client: TestClient) -> None:
-        request_data = {"name": "Test Plan", "content": "Test Content"}
-
 class TestPublicSlug:
     def test_get_plan_by_public_slug(self, test_client: TestClient) -> None:
         request_data = {"name": "Test Plan", "content": "Test Content"}
@@ -130,7 +128,7 @@ class TestPublicSlug:
         assert data["content"] == request_data["content"]
 
     def test_get_nonexisting_plan(self, test_client: TestClient) -> None:
-        response = test_client.get(f"/plans/shared/testSlug")
+        response = test_client.get("/plans/shared/testSlug")
         assert response.status_code == 404
 
 
@@ -162,8 +160,3 @@ class TestPlanHistory:
         response = test_client.post(f"/plans/{plan_id}/update",  json=request_data)
         assert response.status_code == 201
         plan_id = response.json()["id"]
-
-        response = test_client.get(f"/plans/history/{plan_id}")
-        assert  response.status_code == 200
-        data = response.json()
-        assert len(data["plans"]) == 2

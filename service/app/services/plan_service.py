@@ -2,8 +2,8 @@ import base64
 from collections.abc import Sequence
 from uuid import UUID
 
+from sqlalchemy import and_, func
 from sqlmodel import Session, select
-from sqlalchemy import func, and_
 
 from ..models.plan import Plan
 from ..schemas.plan import PlanCreate, PlanRead, PlanUpdate
@@ -45,7 +45,7 @@ def get_plan_by_public_slug(public_slug: str, session: Session) -> PlanRead:
     return PlanRead.model_validate(plan)
 
 
-def get_plan_history(user_id: UUID, plan_id: UUID, session: Session) -> Sequence[PlanRead]:
+def get_plan_history(plan_id: UUID, session: Session) -> Sequence[PlanRead]:
     current_plan = session.get(Plan, plan_id)
     statement = (
         select(Plan)
@@ -79,8 +79,7 @@ def delete_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
         session.commit()
 
 def create_public_slug(group_id: UUID) -> str:
-    slug = base64.urlsafe_b64encode(group_id.bytes).rstrip(b'=').decode('ascii')
-    return slug
+    return base64.urlsafe_b64encode(group_id.bytes).rstrip(b"=").decode("ascii")
 
 def update_plan(user_id: UUID, plan_id: UUID, plan_data: PlanUpdate, session: Session) -> PlanRead:
     current_plan = session.get(Plan, plan_id)
