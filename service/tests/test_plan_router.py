@@ -113,6 +113,7 @@ class TestBadDB:
         response = test_client.get(f"/plans/history/{uuid.uuid4()}")
         assert response.status_code == 500
 
+
 class TestPublicSlug:
     def test_get_plan_by_public_slug(self, test_client: TestClient) -> None:
         request_data = {"name": "Test Plan", "content": "Test Content"}
@@ -139,13 +140,13 @@ class TestPlanHistory:
         assert response.status_code == 201
 
         response = test_client.get("/plans")
-        assert  response.status_code == 200
+        assert response.status_code == 200
         data = response.json()
         assert len(data["plans"]) == 1
         plan_id = data["plans"][0]["id"]
 
         request_data = {"content": "New Test Content"}
-        response = test_client.post(f"/plans/{plan_id}/update",  json=request_data)
+        response = test_client.post(f"/plans/{plan_id}/update", json=request_data)
         assert response.status_code == 201
         data = response.json()
         assert data["content"] == request_data["content"]
@@ -157,6 +158,6 @@ class TestPlanHistory:
         plan_id = response.json()["id"]
 
         request_data = {"content": "New Test Content"}
-        response = test_client.post(f"/plans/{plan_id}/update",  json=request_data)
+        response = test_client.post(f"/plans/{plan_id}/update", json=request_data)
         assert response.status_code == 201
         plan_id = response.json()["id"]

@@ -29,11 +29,7 @@ async def override_auth_dependency(request: Request, session: Annotated[Session,
 
 
 def override_get_session() -> Generator[Session, Any]:
-    engine = create_engine(
-        "sqlite://",
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool
-    )
+    engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
     session = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=Session)
 
     db = session()

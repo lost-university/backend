@@ -34,15 +34,17 @@ async def get_plan_by_public_slug(public_slug: str, session: Annotated[Session, 
         raise HTTPException(status_code=500, detail="Failed to get plan. Please report to page-admin") from e
     return plan
 
+
 @router.get("/plans/history/{plan_id}", dependencies=[Depends(auth_dependency)])
-async  def get_plan_history(
-        request: Request, plan_id: UUID, session: Annotated[Session, Depends(get_session)]
+async def get_plan_history(
+    request: Request, plan_id: UUID, session: Annotated[Session, Depends(get_session)]
 ) -> dict[str, Sequence[PlanRead]]:
     try:
         plans = plan_service.get_plan_history(request.state.user.id, plan_id, session)
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to get plans. Please report to page-admin") from e
     return {"plans": plans}
+
 
 @router.post("/plans", dependencies=[Depends(auth_dependency)], status_code=201)
 async def create_plan(
@@ -54,6 +56,7 @@ async def create_plan(
         raise HTTPException(status_code=500, detail="Failed to create plan. Please report to page-admin") from e
     return created_plan
 
+
 @router.post("/plans/{plan_id}/update", dependencies=[Depends(auth_dependency)], status_code=201)
 async def update_plan(
     request: Request, plan_id: UUID, plan_data: PlanUpdate, session: Annotated[Session, Depends(get_session)]
@@ -64,6 +67,7 @@ async def update_plan(
         raise HTTPException(status_code=500, detail="Failed to create plan. Please report to page-admin") from e
     return created_plan
 
+
 @router.delete("/plans/{plan_id}", dependencies=[Depends(auth_dependency)], status_code=204)
 async def delete_plan(request: Request, plan_id: UUID, session: Annotated[Session, Depends(get_session)]) -> None:
     try:
@@ -72,6 +76,7 @@ async def delete_plan(request: Request, plan_id: UUID, session: Annotated[Sessio
         raise HTTPException(status_code=404, detail=str(e)) from e
     except Exception as e:
         raise HTTPException(status_code=500, detail="Failed to delete plan. Please report to page-admin") from e
+
 
 @router.patch("/plans/bookmark/{plan_id}", dependencies=[Depends(auth_dependency)], status_code=204)
 async def bookmark_plan(request: Request, plan_id: UUID, session: Annotated[Session, Depends(get_session)]) -> None:

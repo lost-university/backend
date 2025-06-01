@@ -11,21 +11,17 @@ from ..schemas.plan import PlanCreate, PlanRead, PlanUpdate
 
 def get_plans(user_id: UUID, session: Session) -> Sequence[PlanRead]:
     subquery = (
-        select(
-            Plan.group_version_id,
-            func.max(Plan.created_at).label("max_created_at")
-        )
+        select(Plan.group_version_id, func.max(Plan.created_at).label("max_created_at"))
         .where(Plan.user_id == user_id)
         .group_by(Plan.group_version_id)
         .subquery()
     )
     statement = (
         select(Plan)
-        .join(subquery,
-              and_(
-                  Plan.group_version_id == subquery.c.group_version_id,
-                  Plan.created_at == subquery.c.max_created_at
-              ))
+        .join(
+            subquery,
+            and_(Plan.group_version_id == subquery.c.group_version_id, Plan.created_at == subquery.c.max_created_at),
+        )
         .where(Plan.user_id == user_id)
     )
     plans = session.exec(statement).all()
@@ -33,11 +29,7 @@ def get_plans(user_id: UUID, session: Session) -> Sequence[PlanRead]:
 
 
 def get_plan_by_public_slug(public_slug: str, session: Session) -> PlanRead:
-    statement = (
-        select(Plan)
-        .where(Plan.public_slug == public_slug)
-        .order_by(Plan.created_at.desc())
-    )
+    statement = select(Plan).where(Plan.public_slug == public_slug).order_by(Plan.created_at.desc())
     plan = session.exec(statement).first()
     if not plan:
         error_msg = "Plan not found"
@@ -48,9 +40,7 @@ def get_plan_by_public_slug(public_slug: str, session: Session) -> PlanRead:
 def get_plan_history(plan_id: UUID, session: Session) -> Sequence[PlanRead]:
     current_plan = session.get(Plan, plan_id)
     statement = (
-        select(Plan)
-        .where(Plan.group_version_id == current_plan.group_version_id)
-        .order_by(Plan.created_at.desc())
+        select(Plan).where(Plan.group_version_id == current_plan.group_version_id).order_by(Plan.created_at.desc())
     )
     plans = session.exec(statement).all()
     return [PlanRead.model_validate(plan) for plan in plans]
@@ -78,8 +68,10 @@ def delete_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
         session.delete(plan)
         session.commit()
 
+
 def create_public_slug(group_id: UUID) -> str:
     return base64.urlsafe_b64encode(group_id.bytes).rstrip(b"=").decode("ascii")
+
 
 def update_plan(user_id: UUID, plan_id: UUID, plan_data: PlanUpdate, session: Session) -> PlanRead:
     current_plan = session.get(Plan, plan_id)
@@ -89,13 +81,14 @@ def update_plan(user_id: UUID, plan_id: UUID, plan_data: PlanUpdate, session: Se
         "content": plan_data.content,
         "public_slug": current_plan.public_slug,
         "bookmark": current_plan.bookmark,
-        "user_id": user_id
+        "user_id": user_id,
     }
     new_plan = Plan(**new_plan_data)
     session.add(new_plan)
     session.commit()
     session.refresh(new_plan)
     return PlanRead.model_validate(new_plan)
+
 
 def bookmark_plan(user_id: UUID, plan_id: UUID, session: Session) -> None:
     plan = session.get(Plan, plan_id)
