@@ -4,6 +4,7 @@ from typing import Annotated, Any
 import pytest
 from fastapi import Depends, Request
 from fastapi.testclient import TestClient
+from sqlalchemy import StaticPool
 from sqlalchemy.exc import OperationalError
 from sqlalchemy.orm import sessionmaker
 from sqlmodel import Session, create_engine
@@ -28,7 +29,7 @@ async def override_auth_dependency(request: Request, session: Annotated[Session,
 
 
 def override_get_session() -> Generator[Session, Any]:
-    engine = create_engine("sqlite:///:memory:")
+    engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
     session = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=Session)
 
     db = session()

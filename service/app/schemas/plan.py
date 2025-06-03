@@ -9,11 +9,16 @@ class PlanRead(SQLModel):
     group_version_id: UUID
     name: str
     content: str
-    is_favorite: bool
+    public_slug: str
+    bookmark: bool
     created_at: datetime
     user_id: UUID
 
 
 class PlanCreate(SQLModel):
     name: str
+    content: str
+
+
+class PlanUpdate(SQLModel):
     content: str
