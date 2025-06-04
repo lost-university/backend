@@ -23,6 +23,7 @@ def get_plans(user_id: UUID, session: Session) -> Sequence[PlanRead]:
             and_(Plan.group_version_id == subquery.c.group_version_id, Plan.created_at == subquery.c.max_created_at),
         )
         .where(Plan.user_id == user_id)
+        .order_by(Plan.bookmark.desc(), Plan.name)
     )
     plans = session.exec(statement).all()
     return [PlanRead.model_validate(plan) for plan in plans]
