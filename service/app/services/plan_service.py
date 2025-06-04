@@ -23,13 +23,18 @@ def get_plans(user_id: UUID, session: Session) -> Sequence[PlanRead]:
             and_(Plan.group_version_id == subquery.c.group_version_id, Plan.created_at == subquery.c.max_created_at),
         )
         .where(Plan.user_id == user_id)
+        .order_by(Plan.bookmark.desc(), Plan.name)
     )
     plans = session.exec(statement).all()
     return [PlanRead.model_validate(plan) for plan in plans]
 
 
 def get_plan_by_public_slug(public_slug: str, session: Session) -> PlanRead:
-    statement = select(Plan).where(Plan.public_slug == public_slug).order_by(Plan.created_at.desc())
+    statement = (
+        select(Plan)
+        .where(Plan.public_slug == public_slug)
+        .order_by(Plan.created_at.desc())
+    )
     plan = session.exec(statement).first()
     if not plan:
         error_msg = "Plan not found"
@@ -40,7 +45,9 @@ def get_plan_by_public_slug(public_slug: str, session: Session) -> PlanRead:
 def get_plan_history(plan_id: UUID, session: Session) -> Sequence[PlanRead]:
     current_plan = session.get(Plan, plan_id)
     statement = (
-        select(Plan).where(Plan.group_version_id == current_plan.group_version_id).order_by(Plan.created_at.desc())
+        select(Plan)
+        .where(Plan.group_version_id == current_plan.group_version_id)
+        .order_by(Plan.created_at.desc())
     )
     plans = session.exec(statement).all()
     return [PlanRead.model_validate(plan) for plan in plans]
