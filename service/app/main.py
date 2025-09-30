@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import plan_router
+from .routers import config_router, plan_router
 
 load_dotenv()
 app = FastAPI()
@@ -19,6 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(config_router.router)
 app.include_router(plan_router.router)
 
 
