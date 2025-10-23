@@ -1,0 +1,21 @@
+apiVersion: postgres-operator.crunchydata.com/v1beta1
+kind: PostgresCluster
+metadata:
+  name: lost-university-postgres
+  namespace: lost-university
+  annotations:
+    postgres-operator.crunchydata.com/autoCreateUserSchema: "true"
+spec:
+  postgresVersion: 17
+  users:
+    - name: postgres
+      databases:
+        - ost
+  instances:
+    - name: instance1
+      dataVolumeClaimSpec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 10Gi

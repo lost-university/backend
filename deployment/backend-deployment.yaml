@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    service: backend
+  name: backend
+  namespace: lost-university
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: backend
+  template:
+    metadata:
+      annotations:
+      labels:
+        service: backend
+    spec:
+      containers:
+        - image: ghcr.io/lost-university/backend:main
+          name: backend
+          envFrom:
+            - secretRef:
+                name: backend-secrets
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: lost-university-postgres-pguser-postgres
+                  key: user
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lost-university-postgres-pguser-postgres
+                  key: password
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: lost-university-postgres-pguser-postgres
+                  key: dbname
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: lost-university-postgres-pguser-postgres
+                  key: host
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: lost-university-postgres-pguser-postgres
+                  key: port
+            - name: AUTHORIZED_PARTIES
+              value: https://lost.university
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+            requests:
+              cpu: 1
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: lost-university
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: http
+  selector:
+    service: backend
+  type: ClusterIP

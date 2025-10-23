@@ -1,0 +1,53 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: lost-university
+spec:
+  endpointSelector: {}
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: kube-system
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+          rules:
+            dns:
+              - matchPattern: "*"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: backend
+  namespace: lost-university
+spec:
+  endpointSelector:
+    matchLabels:
+      service: backend
+  egress:
+    - toFQDNs:
+        - matchName: api.clerk.com
+      toPorts:
+        - ports:
+            - port: "443"
+    - toEndpoints:
+        - matchLabels:
+            postgres-operator.crunchydata.com/cluster: lost-university-postgres
+            postgres-operator.crunchydata.com/instance-set: instance1
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: postgres
+  namespace: lost-university
+spec:
+  endpointSelector:
+    matchLabels:
+      postgres-operator.crunchydata.com/cluster: lost-university-postgres
+      postgres-operator.crunchydata.com/instance-set: instance1
+  egress:
+    - toEntities:
+        - kube-apiserver

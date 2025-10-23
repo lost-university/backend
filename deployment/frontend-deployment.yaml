@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: frontend
+  name: frontend
+  namespace: lost-university
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: frontend
+  template:
+    metadata:
+      labels:
+        service: frontend
+    spec:
+      containers:
+        - image: ghcr.io/lost-university/web:main
+          name: frontend
+          ports:
+            - name: http
+              containerPort: 80
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi
+            requests:
+              cpu: 1
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: lost-university
+spec:
+  type: ClusterIP
+  selector:
+    service: frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: http
