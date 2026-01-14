@@ -3,6 +3,9 @@ kind: Ingress
 metadata:
   name: lost-university-ingress
   namespace: lost-university
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-http01-prod
+
 spec:
   ingressClassName: nginx
   rules:
@@ -26,6 +29,8 @@ kind: Ingress
 metadata:
   name: lost-university-ingress-api
   namespace: lost-university
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-http01-prod
 spec:
   ingressClassName: nginx
   rules:
