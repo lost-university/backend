@@ -14,6 +14,7 @@ engine = create_engine(postgres_url, echo=True)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine, class_=Session)
 
+
 def is_database_initialized() -> bool:
     table_names = SQLModel.metadata.tables
     if not table_names:
@@ -21,6 +22,7 @@ def is_database_initialized() -> bool:
 
     inspector = inspect(engine)
     return all(inspector.has_table(table_name) for table_name in table_names)
+
 
 def create_db_and_tables() -> None:
     if is_database_initialized():
