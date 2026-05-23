@@ -25,14 +25,12 @@ Development:
    ```bash
    uv python install 3.13
    ```
-3. Create database (database has to be running):
-   ```bash
-   uv run ./app/create_tables.py 
-   ```
-4. Run the backend:
+3. Run the backend:
    ```bash
    uv run fastapi dev
    ```
+
+The backend creates missing tables automatically on startup.
 
 ### Linting (run inside service folder)
 Use the following command to reformat the files:
