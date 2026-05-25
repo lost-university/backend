@@ -1,21 +1,99 @@
 services:
+  traefik:
+    container_name: traefik
+    image: traefik:v3.6
+    command:
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --entrypoints.web.address=:80
+    ports:
+      - "5173:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
   postgres-db:
     container_name: postgres-db
     image: postgres:17.4-alpine
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
     restart: always
     environment:
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_DB=${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - postgres_db:/var/lib/postgresql/data
+
+  backend:
+    container_name: backend
+    build:
+      context: ./service
+    command: uv run fastapi dev app/main.py --host 0.0.0.0 --port 8000
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: postgres-db
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${POSTGRES_DB}
+      AUTHORIZED_PARTIES: ${AUTHORIZED_PARTIES:-http://localhost:5173}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+      CLERK_PUBLISHABLE_KEY: ${CLERK_PUBLISHABLE_KEY}
+    ports:
+      - "8000:8000"
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.backend.rule=PathPrefix(`/api`)
+      - traefik.http.routers.backend.entrypoints=web
+      - traefik.http.routers.backend.priority=100
+      - traefik.http.routers.backend.middlewares=backend-strip-api
+      - traefik.http.middlewares.backend-strip-api.stripprefix.prefixes=/api
+      - traefik.http.services.backend.loadbalancer.server.port=8000
+    develop:
+      watch:
+        - action: sync
+          path: ./service/app
+          target: /app/app
+        - action: rebuild
+          path: ./service/pyproject.toml
+        - action: rebuild
+          path: ./service/uv.lock
+
+  frontend:
+    container_name: frontend
+    build:
+      context: ../web
+      dockerfile: Dockerfile.dev
+    command: npm run dev -- --host 0.0.0.0 --port 5173
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://localhost:8000
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.frontend.rule=PathPrefix(`/`)
+      - traefik.http.routers.frontend.entrypoints=web
+      - traefik.http.routers.frontend.priority=1
+      - traefik.http.services.frontend.loadbalancer.server.port=5173
+    develop:
+      watch:
+        - action: sync
+          path: ../web/src
+          target: /app/src
+        - action: sync
+          path: ../web/public
+          target: /app/public
+        - action: rebuild
+          path: ../web/package.json
+        - action: rebuild
+          path: ../web/package-lock.json
 
 volumes:
   postgres_db:

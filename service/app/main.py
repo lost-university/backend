@@ -1,13 +1,28 @@
 import os
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .database import create_db_and_tables
 from .routers import config_router, plan_router
 
 load_dotenv()
-app = FastAPI()
+
+
+async def initialize_database() -> None:
+    create_db_and_tables()
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
+    await initialize_database()
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 origins = os.getenv("AUTHORIZED_PARTIES").split(",")
 

@@ -28,7 +28,7 @@ ignore = [
     #### Modules
     "D",    # pydocstyle
     "TID",  # flake8-tidy-imports
-    "COM",  # flake8-commas 
+    "COM",  # flake8-commas
 
     #### specific rules
     "T201", # print statements
