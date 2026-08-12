@@ -5,8 +5,9 @@ metadata:
   namespace: lost-university
 spec:
   parentRefs:
-    - name: gateway-shared
-      namespace: envoy-gateway-system
+    - kind: ListenerSet
+      name: lost-university-listeners
+      namespace: lost-university
   hostnames:
     - lost.university
   rules:
@@ -24,3 +25,25 @@ spec:
       backendRefs:
         - name: backend
           port: 80
+---
+kind: ListenerSet
+apiVersion: gateway.networking.k8s.io/v1
+metadata:
+  name: lost-university-listeners
+  namespace: lost-university
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-http01-prod
+    acme.cert-manager.io/http01-parentreffallback: "true"
+spec:
+  parentRef:
+    name: gateway-shared
+    namespace: envoy-gateway-system
+  listeners:
+    - name: https
+      hostname: lost.university
+      port: 443
+      protocol: HTTPS
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: lost-university-tls
