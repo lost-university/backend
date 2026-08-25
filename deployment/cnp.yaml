@@ -1,7 +1,7 @@
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: default-deny-egress
+  name: default-deny
   namespace: lost-university
 spec:
   endpointSelector: {}
