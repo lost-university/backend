@@ -10,6 +10,6 @@ resources:
 # image tags are set here by the deploy jobs in CI, not in the deployment manifests
 images:
 - name: ghcr.io/lost-university/backend
-  newTag: 1.0.0
+  newTag: 1.0.1
 - name: ghcr.io/lost-university/web
   newTag: main
