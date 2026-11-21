@@ -1,7 +1,7 @@
 services:
   traefik:
     container_name: traefik
-    image: traefik:v3.6
+    image: traefik:v3.7
     command:
       - --providers.docker=true
       - --providers.docker.exposedbydefault=false
@@ -13,7 +13,7 @@ services:
 
   postgres-db:
     container_name: postgres-db
-    image: postgres:17.4-alpine
+    image: postgres:17.12-alpine
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s

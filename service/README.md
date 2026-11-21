@@ -21,9 +21,9 @@ Development:
    ```bash
    curl -LsSf https://astral.sh/uv/install.sh | sh
    ```
-2. Install python version 3.13:
+2. Install python version 3.15:
    ```bash
-   uv python install 3.13
+   uv python install 3.15
    ```
 3. Run the backend:
    ```bash

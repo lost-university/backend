@@ -3,24 +3,24 @@ name = "service"
 version = "0.1.0"
 description = "FastAPI backend service for lost.university"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.15"
 dependencies = [
-    "fastapi[standard]>=0.115.12",
-    "psycopg[binary,pool]>=3.2.6",
-    "sqlmodel>=0.0.24",
-    "clerk_backend_api",
+    "fastapi[standard]>=0.165.0",
+    "psycopg[binary,pool]>=3.3.9",
+    "sqlmodel>=0.0.50",
+    "clerk_backend_api>=7.1.1",
 ]
 
 [dependency-groups]
 dev = [
-    "pytest>=8.3.5",
-    "pytest-cov>=6.1.1",
-    "ruff>=0.11.2",
+    "pytest>=9.2.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.6",
 ]
 
 [tool.ruff]
 line-length = 120
-target-version = "py313"
+target-version = "py315"
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -29,6 +29,8 @@ ignore = [
     "D",    # pydocstyle
     "TID",  # flake8-tidy-imports
     "COM",  # flake8-commas
+    "CPY",  # flake8-copyright
+    "TC",   # flake8-type-checking, FastAPI and SQLModel read annotations at runtime
 
     #### specific rules
     "T201", # print statements

@@ -2,7 +2,7 @@ import os
 from typing import Annotated
 
 from clerk_backend_api import Clerk
-from clerk_backend_api.jwks_helpers import AuthenticateRequestOptions, RequestState
+from clerk_backend_api.security import AuthenticateRequestOptions, RequestState
 from dotenv import load_dotenv
 from fastapi import Depends, HTTPException, Request
 from sqlmodel import Session

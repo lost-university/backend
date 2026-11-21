@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 
+from pydantic import NaiveDatetime
 from sqlmodel import Field, SQLModel
 
 
@@ -11,5 +12,6 @@ class Plan(SQLModel, table=True):
     content: str
     public_slug: str | None
     bookmark: bool = Field(default=False)
-    created_at: datetime = Field(default_factory=datetime.now)
+    # naive like the existing `timestamp without time zone` column
+    created_at: NaiveDatetime = Field(default_factory=datetime.now)
     user_id: uuid.UUID = Field(nullable=False, foreign_key="user.id")
