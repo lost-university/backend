@@ -16,7 +16,7 @@ spec:
         service: frontend
     spec:
       containers:
-        - image: ghcr.io/lost-university/web:main
+        - image: ghcr.io/lost-university/web
           name: frontend
           ports:
             - name: http
