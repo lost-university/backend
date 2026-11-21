@@ -18,7 +18,7 @@ spec:
         service: backend
     spec:
       containers:
-        - image: ghcr.io/lost-university/backend:main
+        - image: ghcr.io/lost-university/backend
           name: backend
           envFrom:
             - secretRef:
